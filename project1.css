@@ -3,6 +3,12 @@ body {
     font-size: 11px;
 }
 
+.line {
+    fill: none;
+    stroke: #00F;
+    stroke-width: 2px;
+}
+
 .axis path,
 .axis line {
     fill: none;
