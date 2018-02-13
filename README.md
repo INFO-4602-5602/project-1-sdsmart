@@ -29,7 +29,7 @@ One of the challenges with using any dataset is figuring out how to get it from 
 To test if this is working, make sure your server is running and open your browser. Then go to the url localhost/Project0/submissions/<your directory name>/index.html. Under “Part 1”, you should see a note that shows all four datasets have been uploaded correctly. 
 
 <h3>Part 2: Building Scatterplots</h3>
-Under Part Two in index.html, create a line graph using one of the four datasets (your choice of which one). Scatterplots should have both an x- and y-axis, and the data should be scaled according to the maximum y-value in the dataset. Please use the d3.max function to create this scale rather than hard-coding a specific value. Look at the in-class tutorial for an example of how to do this.  Note that you will need to load the dataset you’re using prior to building the visualization.  
+Under Part Two in index.html, create a scatter plot using one of the four datasets (your choice of which one). Scatterplots should have both an x- and y-axis, and the data should be scaled according to the maximum y-value in the dataset. Please use the d3.max function to create this scale rather than hard-coding a specific value. Look at the in-class tutorial for an example of how to do this.  Note that you will need to load the dataset you’re using prior to building the visualization.  
 
 <h3>Part 3: Building Line Graphs</h3>
 Under Part Three in index.html, visualize the same dataset you used in Part 2 using a line graph. Map x to the x-axis and y to the y-axis. As with the scatterplot, you should include axes and scale your visualization to fit the maximum values in the data. 
