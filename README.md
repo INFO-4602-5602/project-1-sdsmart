@@ -21,7 +21,7 @@ Per the course policies, projects may be submitted up to 72 hours late, with a 1
 <h2>Project Specifications</h2>
 
 
-<h3>Part 1: Interpreting Data</h3>
+<h3>Part 1: Loading Data</h3>
 Pull down the project code from GitHub. In the submissions directory, create a directory using your last name (e.g., szafir) and copy the data directory, index.html, and project0.css into it. Then, open up the index.html page in your text editor. 
 
 One of the challenges with using any dataset is figuring out how to get it from its original format into your visualization. You’ve been provided with four CSV (comma-separated values) files in the data directory of the project GitHub. Under Part One in index.html, use D3’s d3.csv functionality to upload all four datasets. To do this, you should be sure to import D3 inside of your webpage’s <head> (your choice of version) and make sure you’re using a local server to work with your code (either with XAMPP or Python). Each time you use d3.csv, you should include a function that calls the checkDataset function on your data (this is included in the skeleton code). 
