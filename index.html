@@ -1,7 +1,15 @@
+<!--
+INFO 5602: Project 1
+
+Name: Stephen Smart
+Last Modified Date: 2/14/18
+-->
+
 <html>
 
 <head>
     <title>Project 1</title>
+    <!--Importing bootstrap for minimal col/row usage for part 5 div organization-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"></link>
     <link rel="stylesheet" type="text/css" href="project1.css"></link>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -60,13 +68,12 @@
                 $("#partOne").append("<p>data loaded incorrectly. Try using the debugger to help you find the bug!</p>");
         }
 
-        // Helper function to sort an array of objects pulled from here:
-        // https://tinyurl.com/y7u2knb2
-        function compare(a, b) {
-            if (parseInt(a.x) < parseInt(b.x)) {
+        // Helper function to sort an array of objects:
+        function compare(obj1, obj2) {
+            if (parseInt(obj1.x) < parseInt(obj2.x)) {
                 return -1;
             }
-            else if (parseInt(a.x) > parseInt(b.x)) {
+            else if (parseInt(obj1.x) > parseInt(obj2.x)) {
                 return 1;
             }
             else {
@@ -74,10 +81,10 @@
             }
         }
 
-        // Helper function to calculate the y values for the line of best fit
-        // Used the following example for help:
-        // https://tinyurl.com/yc3o737v
-        function calculateYHats(dataset) {
+        // Helper function to calculate the line data for the line of best fit
+        // I used the following example for help: https://tinyurl.com/yc3o737v
+        function calculateLineData(dataset) {
+            // Calculating the means of the dataset
             var meanX = 0;
             var meanY = 0;
             for (var i = 0; i < dataset.length; i++) {
@@ -87,6 +94,7 @@
             meanX = meanX / dataset.length;
             meanY = meanY / dataset.length;
 
+            // Calculating the coefficients
             var xC = 0;
             var yC = 0;
             var c1 = 0;
@@ -101,19 +109,25 @@
             var slope = c1 / c2;
             var intercept = meanY - (slope * meanX);
 
+            // Generating the line y values
             yHats = []
             for (var i = 0; i < dataset.length; i++) {
                 yHats.push((parseInt(dataset[i].x) * slope) + intercept)
             }
 
-            return yHats;
+            // Generating the complete line data
+            var lineData = [];
+            for (var i = 0; i < dataset.length; i++) {
+                lineData.push({x: parseInt(dataset[i].x), yHat: yHats[i]});
+            }
+
+            return lineData;
         }
 
         // Put your part one code here ***********************
 
-        // Loading in the datasets
-
-        // I found this method for loading multiple csv files here:
+        // Loading in the datasets in a nested fashion since we will be rendering many plots
+        // that use all the different data sources. I found this nested method described here:
         // https://tinyurl.com/yb83aofg
         d3.csv('data/anscombe_I.csv', function(error1, data1) {
             if (error1) throw error1;
@@ -124,11 +138,13 @@
                     d3.csv('data/anscombe_IV.csv', function(error4, data4) {
                         if (error4) throw error4;
 
+                        // Checking the datasets for correctness
                         checkDataset(data1);
                         checkDataset(data2);
                         checkDataset(data3);
                         checkDataset(data4);
 
+                        // Sorting the data
                         data1.sort(compare);
                         data2.sort(compare);
                         data3.sort(compare);
@@ -136,42 +152,27 @@
 
                         // Put your part two and four code here ***********************
 
-                        // Set up the graph dimensions and margins
+                        // Setting up the graph dimensions and margins
                         var margin = {top: 20, right: 20, bottom: 30, left: 50};
                         var width = 500 - margin.left - margin.right;
                         var height = 300 - margin.top - margin.bottom;
                         var smallR = 5;
                         var bigR = 8;
 
-                        // Set the ranges
+                        // Setting the ranges
                         var x = d3.scaleLinear().range([0, width]);
                         var y = d3.scaleLinear().range([height, 0]);
 
-                        // Found a nice way to add padding around the x and y axis domains here:
-                        // https://tinyurl.com/ycbaokrf
+                        // Adding padding for the axes. I Found a nice way to add padding
+                        // around the x and y axis domains here: https://tinyurl.com/ycbaokrf
                         var xExtent = d3.extent(data1, function(d) { return parseInt(d.x); })
                         var xRange = xExtent[1] - xExtent[0];
                         x.domain([Math.floor(xExtent[0] - (xRange*0.10)), Math.ceil(xExtent[1] + (xRange*0.10))]);
                         var yMax = d3.max(data1, function(d) { return parseFloat(d.y); });
                         y.domain([0, Math.ceil(yMax + (yMax*0.10))]);
 
-                        var tooltip = d3.select('body')
-                                        .append('div')
-                                            .attr('class', 'tooltip')
-                                            .style('opacity', 0);
-
-                        var svg_sp = d3.select('#scatterPlot')
-                                         .append('svg')
-                                             .attr('width', width + margin.left + margin.right)
-                                             .attr('height', height + margin.top + margin.bottom)
-                                         .append('g')
-                                             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-                        yHats = calculateYHats(data1);
-                        lineData = [];
-                        for (var i = 0; i < data1.length; i++) {
-                            lineData.push({x: parseInt(data1[i].x), yHat: yHats[i]});
-                        }
+                        // Calculating the line of best fit
+                        lineData = calculateLineData(data1);
 
                         var bestFitLineFunction = d3.line()
                                                     .x(function(d) {
@@ -181,6 +182,21 @@
                                                         return y(parseFloat(d.yHat));
                                                     });
 
+                        // Setting up tooltip div
+                        var tooltip = d3.select('body')
+                                        .append('div')
+                                            .attr('class', 'tooltip')
+                                            .style('opacity', 0);
+
+                        // Initializing svg
+                        var svg_sp = d3.select('#scatterPlot')
+                                         .append('svg')
+                                             .attr('width', width + margin.left + margin.right)
+                                             .attr('height', height + margin.top + margin.bottom)
+                                         .append('g')
+                                             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+                        // Rendering line of best fit, scatter plot, axes, etc.
                         svg_sp.append('path')
                                 .attr('class', 'line')
                                 .attr('d', bestFitLineFunction(lineData));
@@ -205,7 +221,7 @@
                                                   .duration(200)
                                                   .attr('r', bigR);
 
-                                        // Found tooltip example here that I based my solution from:
+                                        // Found tooltip example that I based my solution from here:
                                         // https://tinyurl.com/yahpgvkw
                                         tooltip.transition()
                                                .duration(400)
@@ -240,17 +256,18 @@
                                 .text('X')
                                 .attr('x', width - 3)
                                 .attr('y', height - 5)
-                                .style('fill', '#00F');
+                                .style('fill', '#090');
 
                         svg_sp.append('text')
                                 .attr('class', 'label')
                                 .text('Y')
                                 .attr('x', 10)
                                 .attr('y', 9)
-                                .style('fill', '#00F');
+                                .style('fill', '#090');
                         
                         // Put your part three code here ***********************
 
+                        // Initializing svg
                         var svg_lg = d3.select('#lineGraph')
                                          .append('svg')
                                              .attr('width', width + margin.left + margin.right)
@@ -258,11 +275,13 @@
                                          .append('g')
                                              .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+                        // Setting up line function
                         var lineFunction = d3.line()
                                                  .x(function(d) { return x(d.x); })
                                                  .y(function(d) { return y(d.y); })
                                                  .curve(d3.curveLinear);
 
+                        // Rendering everything
                         svg_lg.append('path')
                                 .attr('class', 'line')
                                 .attr('d', lineFunction(data1));
@@ -290,6 +309,7 @@
                         
                         // Put your part five code here ***********************
 
+                        // Initializing multi scatter plot dimensions and margins
                         var margin_multi_sp = {top: 20, right: 20, bottom: 30, left: 50};
                         var width_multi_sp = 300 - margin_multi_sp.left - margin_multi_sp.right;
                         var height_multi_sp = 200 - margin_multi_sp.top - margin_multi_sp.bottom;
@@ -301,7 +321,7 @@
                         x_multi_sp.domain([Math.floor(xExtent[0] - (xRange*0.10)), Math.ceil(xExtent[1] + (xRange*0.10))]);
                         y_multi_sp.domain([0, Math.ceil(yMax + (yMax*0.10))]);
 
-                        // Top left scatter plot
+                        // Rendering top left scatter plot
                         var svg_msp1 = d3.select('#sp1')
                                          .append('svg')
                                              .attr('width', width_multi_sp + margin_multi_sp.left + margin_multi_sp.right)
@@ -339,7 +359,7 @@
                                 .attr('y', 9)
                                 .style('fill', '#00F');
 
-                        // Top right scatter plot
+                        // Setting up axiss domains
                         var xExtent_d2 = d3.extent(data2, function(d) { return parseInt(d.x); })
                         var xRange_d2 = xExtent_d2[1] - xExtent_d2[0];
                         x_multi_sp.domain([xExtent_d2[0] - (xRange_d2*0.10), xExtent_d2[1] + (xRange_d2*0.10)]);
@@ -349,6 +369,7 @@
                         x_multi_sp.domain([Math.floor(xExtent_d2[0] - (xRange_d2*0.10)), Math.ceil(xExtent_d2[1] + (xRange_d2*0.10))]);
                         y_multi_sp.domain([0, Math.ceil(yMax_d2 + (yMax_d2*0.10))]);
 
+                        // Rendering top right scatter plot
                         var svg_msp2 = d3.select('#sp2')
                                          .append('svg')
                                              .attr('width', width_multi_sp + margin_multi_sp.left + margin_multi_sp.right)
@@ -386,7 +407,7 @@
                                 .attr('y', 9)
                                 .style('fill', '#00F');
 
-                        // Bottom left scatter plot
+                        // Setting up axiss domains
                         var xExtent_d3 = d3.extent(data3, function(d) { return parseInt(d.x); })
                         var xRange_d3 = xExtent_d3[1] - xExtent_d3[0];
                         x_multi_sp.domain([xExtent_d3[0] - (xRange_d3*0.10), xExtent_d3[1] + (xRange_d3*0.10)]);
@@ -396,6 +417,7 @@
                         x_multi_sp.domain([Math.floor(xExtent_d3[0] - (xRange_d3*0.10)), Math.ceil(xExtent_d3[1] + (xRange_d3*0.10))]);
                         y_multi_sp.domain([0, Math.ceil(yMax_d3 + (yMax_d3*0.10))]);
 
+                        // Rendering bottom left scatter plot
                         var svg_msp3 = d3.select('#sp3')
                                          .append('svg')
                                              .attr('width', width_multi_sp + margin_multi_sp.left + margin_multi_sp.right)
@@ -433,7 +455,7 @@
                                 .attr('y', 9)
                                 .style('fill', '#00F');
 
-                        // Bottom right scatter plot
+                        // Setting up axiss domains
                         var xExtent_d4 = d3.extent(data4, function(d) { return parseInt(d.x); })
                         var xRange_d4 = xExtent_d4[1] - xExtent_d4[0];
                         x_multi_sp.domain([xExtent_d4[0] - (xRange_d4*0.10), xExtent_d4[1] + (xRange_d4*0.10)]);
@@ -443,6 +465,7 @@
                         x_multi_sp.domain([Math.floor(xExtent_d4[0] - (xRange_d4*0.10)), Math.ceil(xExtent_d4[1] + (xRange_d4*0.10))]);
                         y_multi_sp.domain([0, Math.ceil(yMax_d4 + (yMax_d4*0.10))]);
 
+                        // Rendering bottom right scatter plot
                         var svg_msp4 = d3.select('#sp4')
                                          .append('svg')
                                              .attr('width', width_multi_sp + margin_multi_sp.left + margin_multi_sp.right)
