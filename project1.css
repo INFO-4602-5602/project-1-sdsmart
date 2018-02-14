@@ -35,3 +35,17 @@ body {
     cursor: pointer;
     margin-bottom: -10px;
 }
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 55px;
+  height: 35px;
+  padding: 4px;
+  font: 12px sans-serif;
+  background: lightgreen;
+  border: 1px;
+  border-radius: 8px;
+  border-color: #000;
+  pointer-events: none;
+}

@@ -45,10 +45,10 @@ Under Part Five, create a set of four side-by-side scatterplots, one for each da
 Each of the following additions may optionally be completed for extra credit. Bells are worth 2 points. Whistles are worth 5 points. Please note which bells and whistles you’ve completed in your readme.txt.
 
 <h3>Bell: Tooltips</h3>
-Create a tooltip that shows the x- and y-value of each point when you hover over a point in the Part 3 scatterplot. 
+Create a tooltip that shows the x- and y-value of each point when you hover over a point in the Part 2 scatterplot. 
 
 <h3>Bell: Xs and Ys</h3>
-For your bar chart code, create a pair of bar charts for the active dataset: one coding the x-value and one coding the y-value of the current dataset. You can only receive credit for one of this and the “Coordinated Views” whistle. 
+Create a pair of bar charts for the active dataset: one coding the x-value and one coding the y-value of the current dataset. You can only receive credit for one of this and the “Coordinated Views” whistle. 
 
 <h3>Bell: Styling your Visualization</h3>
 The visualization we’ve created here doesn’t have much pizzaz… Update the CSS stylesheet (project0.css) to restyle the visualization according to a central theme (e.g., 80’s neons, old world parchment, borrow ideas from an Instagram filter, etc.). Add a note in your readme.txt explaining the inspiration for your styling choices.
@@ -58,8 +58,6 @@ For each scatterplot, compute and visualize a line of fit on top of each scatter
 
 <h3>Whistle: Transitions </h3>
 Add a menu to your single scatterplot code that allow you to choose which of the four datasets is mapped to the scatterplot. When you change the dataset through this menu, the program should provide an animated transition between the two views. 
-
-
 
 <h3>Whistle: Replication</h3>
 Replicate each of your graphs using Tableau or some other WYSIWYG visualization tool (e.g., Excel, Google Fusion Tables, etc). Make sure you replicate that visualization as precisely as possible (e.g., point color, size, x- and y-axis scales, etc.). Include a .png of your replication in your submission folder. In your readme.txt, outline how you created each visualization in the WYSIWYG system and what differences you experienced in assembling that visualization.  
